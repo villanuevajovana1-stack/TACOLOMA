@@ -10,6 +10,7 @@ import { setBaseUrl } from "@workspace/api-client-react";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
+import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -17,9 +18,15 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/context/AuthContext";
 
-const domain = process.env.EXPO_PUBLIC_DOMAIN || "localhost:5000";
-const protocol = domain.startsWith("localhost") || domain.startsWith("127.0.0.1") || domain.includes("192.168.") || domain.startsWith("10.") ? "http" : "https";
-setBaseUrl(`${protocol}://${domain}`);
+const apiUrl = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5000";
+setBaseUrl(apiUrl);
+
+if (Platform.OS === "web" && typeof document !== "undefined") {
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap";
+  document.head.appendChild(link);
+}
 
 SplashScreen.preventAutoHideAsync();
 
